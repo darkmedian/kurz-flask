@@ -1,0 +1,3 @@
+CREATE DATABASE kurz_prod;
+CREATE DATABASE kurz_dev;
+CREATE DATABASE kurz_test;

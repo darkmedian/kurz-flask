@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+
+  shortener:
+    container_name: shortener
+    build:
+      context: ./shortener
+      dockerfile: Dockerfile
+    volumes:
+      - './shortener:/usr/src/app'
+    ports:
+      - 5001:5000
+    environment:
+      - FLASK_DEBUG=1
+      - KURZ_APP=shortner/__init__.py
+      - APP_SETTINGS=app.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@kurz-db:5432/kurz_dev
+    depends_on:
+      - kurz-db
+    links:
+      - kurz-db
+
+
+  kurz-db:
+    container_name: kurz-db
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
