@@ -21,7 +21,7 @@ def get_all_shortner():
     response_object = {
         'status': 'success',
         'data': {
-            'shortner': [url_shurl_shortner.to_json() for url_shortner in Shortner.query.all()]
+            'shortner': [url_shortner.to_json() for url_shortner in Shortner.query.all()]
         }
     }
     return jsonify(response_object), 200
@@ -44,10 +44,10 @@ def add_user():
             db.session.add(Shortner(url=url, digest=digest))
             db.session.commit()
             response_object['status'] = 'success'
-            response_object['message'] = f'{digest} was added!'
+            response_object['message'] = digest
             return jsonify(response_object), 201
         else:
-            response_object['message'] = 'Sorry. That email already exists.'
+            response_object['message'] = 'Sorry. That url already exists.'
             return jsonify(response_object), 400
     except exc.IntegrityError as e:
         db.session.rollback()
@@ -56,13 +56,13 @@ def add_user():
 
 @shortner_blueprint.route('/shortner/<digest>', methods=['GET'])
 def get_single_user(digest):
-    """Get single user details"""
+    """Get single URL details"""
     response_object = {
         'status': 'fail',
-        'message': 'User does not exist'
+        'message': 'URL does not exist'
     }
     try:
-        url_shortner = Shortner.query.filter_by(id=str(digest)).first()
+        url_shortner = Shortner.query.filter_by(digest=str(digest)).first()
         if not url_shortner:
             return jsonify(response_object), 404
         else:

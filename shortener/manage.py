@@ -5,7 +5,7 @@ from app import create_app, db
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
-
+db.create_all(app=create_app())
 
 @cli.command()
 def recreate_db():
